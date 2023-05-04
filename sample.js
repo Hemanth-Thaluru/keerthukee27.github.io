@@ -111,7 +111,7 @@ function changeanalysis(){
         for (var i = 0; i < state_list.length; i++) {
         options += '<option value="' + state_list[i]+ '">' + state_list[i] + '</option>';
             }
-        document.getElementById("state_list").html(options);
+        $("#state_list").html(options);
           });
 
     }
