@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Layoff Model Data</title>
+		<style>
+			h1 {
+				text-align: center;
+				margin-top: 50px;
+				font-size: 6em;
+				font-family: "Times New Roman", Times, serif;
+			}
+	
+			select {
+				display: block;
+				margin: 50px auto;
+				font-size: 1.2em;
+				padding: 10x;
+				border-radius: 5px;
+				border: none;
+				background-color: #f0f0f0;
+			}
+	
+			#displayArea {
+				text-align: center;
+				margin: 50px;
+				font-size: 2.2em;
+			}
+	
+			img {
+				max-width: 100%;
+				height: auto;
+			}
+	
+			p {
+				margin: 30px auto;
+				text-align: justify;
+				max-width: 80%;
+				line-height: 1.5;
+			}
+			body {
+			background-image: url('https://i.ibb.co/9sTnLpy/background-image.jpg');
+			background-size: cover;
+	}
+		</style>
+	</head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+	<script src = "https://d3js.org/d3.v4.min.js"></script>
+	<script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+	<script type="text/javascript" src="sample.js"></script>
+	
+	
+<body>
+
+	<center><h1>Layoff Model Data</h1></center>
+	
+	<div>
+	<label>Choose a Type</label>
+	<select id="choice" onchange="changechoice()">
+	<option value="#">Select an Option</option>
+	<option value ="model_result">Model Results</option>
+	<option value ="EDA">Exploratory Data Analysis</option>
+	</select>
+</div>
+	<!-- TYPE OF ANALYSIS LABEL -->
+	<div id ="eda" hidden>
+	<label>Select the type of Analysis</label>
+	<select id="analysis_type" onchange="changeanalysis()">
+		<option value="#">Select an Option</option>
+		<option value ="Top Five States">Top Five States</option>
+		<option value ="Top Five Cities">Top Five Cities</option>
+		</select>
+	</div>
+
+
+	<!-- TOP 5 CITIES - CHOOSE STATE -->
+	<div id ="choosestate" hidden>
+		<label>Choose a State</label>
+		<select id="state_list" onchange="showYearsForCities()">
+		</select>
+		</div>
+
+		<!-- YEAR DROP DOWN FOR TOP 5 CITIES -->
+		<div id ="chooseyearforcity" hidden>
+			<label>Choose a Year</label>
+			<select id="year_list_city" onchange="showtop5cities()">
+			</select>
+			</div>
+
+
+
+	<!-- TOP FIVE STATES - CHOOSE YEAR-->
+	<div id ="chooseyear" hidden>
+		<label>Choose a Year</label>
+		<select id="year_list" onchange="top5stateschart()">
+		</select>
+		</div>
+		<!-- TOP 5 STATES CHART -->
+	<div id ="5states">
+		<canvas id="5statechart" style="width:100%;max-width:700px"></canvas>
+	</div>
+
+	<!-- TOP 5 CITIES CHART -->
+	<div id ="5cities">
+		<canvas id="5citieschart" style="width:100%;max-width:700px"></canvas>
+	</div>
+
+
+
+	
+
+
+
+
+
+
+	<div id="modelresult" hidden>
+		<label> Choose a State</label>
+		<select id="mySelect" onchange="displayOption()">
+			<option value ="#">Select an Option</option>
+			<option value = '1'>Alabama</option>
+			<option value = '2'>Alaska</option>
+			<option value = '3'>Arizona</option>
+			<option value = '4'>California</option>
+			<option value = '5'>Colorado</option>
+			<option value = '6'>Connecticut</option>
+			<option value = '7'>Delaware</option>
+			<option value = '8'>Florida</option>
+			<!-- <option value = '9'>Georgia</option> -->
+			<!-- <option value = '11'>Hawaii</option> -->
+			<option value = '10'>Idaho</option>
+			<option value = '11'>Illinois</option>
+			<option value = '12'>Indiana</option>
+			<option value = '13'>Iowa</option>
+			<option value = '14'>Kansas</option>
+			<option value = '15'>Kentucky</option>
+			<option value = '16'>Louisiana</option>
+			<option value = '17'>Maine</option>
+			<option value = '18'>Maryland</option>
+			<option value = '19'>Massachusetts</option>
+			<option value = '20'>Michigan</option>
+			<option value = '21'>Minnesota</option>
+			<!-- <option value = '24'>Mississippi</option> -->
+			<option value = '22'>Missouri</option>
+			<option value = '23'>Montana</option>
+			<option value = '24'>Nebraska</option>
+			<option value = '25'>Nevada</option>
+			<option value = '26'>New Jersey</option>
+			<option value = '27'>New Mexico</option>
+			<option value = '28'>New York</option>
+			<option value = '29'>North Carolina</option>
+			<option value = '30'>North Dakota</option>
+			<option value = '31'>Ohio</option>
+			<option value = '32'>Oklahoma</option>
+			<option value = '33'>Oregon</option>
+			<option value = '34'>Rhode Island</option>
+			<option value = '35'>South Carolina</option>
+			<option value = '36'>South Dakota</option>
+			<option value = '37'>Texas</option>
+			<option value = '38'>Utah</option>
+			<option value = '39'>Vermont</option>
+			<option value = '40'>Virginia</option>
+			<option value = '41'>Washington</option>
+			<option value = '42'>Washington D.C.</option>
+			<option value = '43'>West Virginia</option>
+			<option value = '44'>Wisconsin</option>
+	<!-- 
+			<option value = '29'>New Hampshire</option>
+			<option value = '36'>Pennsylvania</option>
+			<option value = '40'>Tennessee</option>
+	   
+			<option value = '48'>Wyoming</option> -->
+		</select>
+	</div>
+
+	<div id="displayArea" hidden>
+		<!-- <p>Select a state to get the results.</p> -->
+	</div>
+	
+
+	
+
+
+
+	<script>
+		function displayOption() {
+			var displayArea = document.getElementById("displayArea");
+			document.getElementById("displayArea").hidden= false
+			var selectedOption = document.getElementById("mySelect").value;
+
+			if (selectedOption == "1") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/17zwSGT/Alabama.png'><p>Mean Squared Error : 206.857801<br><br />Mean Absolute Error : 1.084511e+00<br><br />Root Mean Square Error : 305.861447<p>";
+			} else if (selectedOption == "2") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/K2pfs1v/Alaska.png'><p>Mean Squared Error : 409.726778<br><br />Mean Absolute Error : 8.723639e-01<br><br />Root Mean Square Error : 495.191759<p>";
+			} else if (selectedOption == "3") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/vPWCF65/Arizona.png'><p>Mean Squared Error : 1427.135632<br><br />Mean Absolute Error : 6.619623e-01<br><br />Root Mean Square Error : 2839.181288<p>";
+			}else if (selectedOption == "4") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/cg1FKgn/California.png'><p>Mean Squared Error : 38437.032840<br><br />Mean Absolute Error : 7.163322e-01<br><br />Root Mean Square Error : 71268.131050<p>";
+			}else if (selectedOption == "5") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/gZYM5N5/Colorado.png'><p>Mean Squared Error : 1834.597560<br><br />Mean Absolute Error : 9.863434e-01<br><br />Root Mean Square Error : 2658.083443<p>";
+			}else if (selectedOption == "6") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/pZyPf5J/Connecticut.png'><p>Mean Squared Error : 718.808685<br><br />Mean Absolute Error : 6.559844e+16<br><br />Root Mean Square Error : 1093.971189<p>";
+			}else if (selectedOption == "7") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/ZMfp748/Delaware.png'><p>Mean Squared Error : 373.729935<br><br />Mean Absolute Error : 7.902853e-01<br><br />Root Mean Square Error : 716.649283<p>";
+			}else if (selectedOption == "8") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/pL5myyc/Florida.png'><p>Mean Squared Error :14092.260411<br><br />Mean Absolute Error : 7.733804e-01<br><br />Root Mean Square Error : 18076.276294<p>";
+			}else if (selectedOption == "9") {
+				displayArea.innerHTML = "<img src='Georgia.png'><p>Mean Squared Error : 0.000000<br><br />Mean Absolute Error : 0.000000<br><br />Root Mean Square Error : 0.000000<p>";
+			}else if (selectedOption == "10") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/5vVJ5DH/Idaho.png'><p>Mean Squared Error : 156.657994<br><br />Mean Absolute Error : 1.322748e+00<br><br />Root Mean Square Error : 363.925271<p>";
+			}else if (selectedOption == "11") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/Cpdvzr7/Illinois.png'><p>Mean Squared Error : 760.169990<br><br />Mean Absolute Error : 6.254693e-01<br><br />Root Mean Square Error : 788.434155<p>";
+			}else if (selectedOption == "12") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/6819Z69/Indiana.png'><p>Mean Squared Error : 944.102703<br><br />Mean Absolute Error : 8.340721e-01<br><br />Root Mean Square Error : 2007.495641<p>";
+			}else if (selectedOption == "13") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/0YtXNMW/Iowa.png'><p>Mean Squared Error : 267.391784<br><br />Mean Absolute Error : 6.430082e-01<br><br />Root Mean Square Error : 369.350702<p>";
+			}else if (selectedOption == "14") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/V3tSKYC/Kansas.png'><p>Mean Squared Error : 480.742729<br><br />Mean Absolute Error : 2.602251e+00<br><br />Root Mean Square Error : 833.560624<p>";
+			}else if (selectedOption == "15") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/mSxdrTF/Kentucky.png'><p>Mean Squared Error : 1508.466969<br><br />Mean Absolute Error : 9.561417e+00<br><br />Root Mean Square Error : 2433.490718<p>";
+			}else if (selectedOption == "16") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/9w3t0hV/Louisiana.png'><p>Mean Squared Error : 872.616059<br><br />Mean Absolute Error : 7.884995e-01<br><br />Root Mean Square Error : 1055.024155<p>";
+			}else if (selectedOption == "17") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/JcxX1WG/Maine.png'><p>Mean Squared Error : 281.892452<br><br />Mean Absolute Error : 4.331529e+00<br><br />Root Mean Square Error : 311.568512<p>";
+			}else if (selectedOption == "18") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/K5YL8y8/Maryland.png'><p>Mean Squared Error : 1073.788239<br><br />Mean Absolute Error : 1.124169e+00<br><br />Root Mean Square Error : 1905.591955<p>";
+			}else if (selectedOption == "19") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/5h5QYM8/Massachusetts.png'><p>Mean Squared Error : 877.415260<br><br />Mean Absolute Error : 9.820268e-01<br><br />Root Mean Square Error : 1055.966171<p>";
+			}else if (selectedOption == "20") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/ZVr3tqw/Michigan.png'><p>Mean Squared Error : 3700.038740<br><br />Mean Absolute Error : 1.020945e+00<br><br />Root Mean Square Error : 5720.247123<p>";
+			}else if (selectedOption == "21") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/fqTbPDc/Minnesota.png'><p>Mean Squared Error : 357.688144<br><br />Mean Absolute Error : 3.631621e-01<br><br />Root Mean Square Error : 460.416084<p>";
+			}else if (selectedOption == "22") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/2hhbwCR/Missouri.png'><p>Mean Squared Error : 1999.142698<br><br />Mean Absolute Error : 7.009145e-01<br><br />Root Mean Square Error : 3364.670342<p>";
+			}else if (selectedOption == "23") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/1f4fVhW/Montana.png'><p>Mean Squared Error : 90.148187<br><br />Mean Absolute Error : 5.721625e-01<br><br />Root Mean Square Error : 101.119929<p>";
+			}else if (selectedOption == "24") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/f1KXL3K/Nebraska.png'><p>Mean Squared Error : 285.649708<br><br />Mean Absolute Error : 2.611303e+00<br><br />Root Mean Square Error : 395.592548<p>";
+			}else if (selectedOption == "25") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/J5Fzm80/Nevada.png'><p>Mean Squared Error : 9343.270596<br><br />Mean Absolute Error : 1.088222e+01<br><br />Root Mean Square Error : 9672.690698<p>";
+			}else if (selectedOption == "26") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/J5Fzm80/Nevada.png'><p>Mean Squared Error : 2312.140452<br><br />Mean Absolute Error : 7.611510e-01<br><br />Root Mean Square Error : 5378.468467<p>";
+			}else if (selectedOption == "27") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/JFpN5CN/New-Mexico.png'><p>Mean Squared Error : 301.399782<br><br />Mean Absolute Error : 5.122477e-01<br><br />Root Mean Square Error : 480.525380<p>";
+			}else if (selectedOption == "28") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/tb2jgxk/New-York.png'><p>Mean Squared Error : 6733.903611<br><br />Mean Absolute Error : 4.980278e-01<br><br />Root Mean Square Error : 16781.148063<p>";
+			}else if (selectedOption == "29") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/k5ZsNP0/North-Carolina.png'><p>Mean Squared Error : 1150.295753<br><br />Mean Absolute Error : 8.624837e-01<br><br />Root Mean Square Error : 1615.261582<p>";
+			}else if (selectedOption == "30") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/RpXcvTJ/North-Dakota.png'><p>Mean Squared Error : 251.087235<br><br />Mean Absolute Error : 7.145128e-01<br><br />Root Mean Square Error : 328.748475<p>";
+			}else if (selectedOption == "31") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/gtnXfvS/Ohio.png'><p>Mean Squared Error : 248.989112<br><br />Mean Absolute Error : 3.176133e-01<br><br />Root Mean Square Error : 305.022456<p>";
+			}else if (selectedOption == "32") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/drJcnTK/Oklahoma.png'><p>Mean Squared Error : 338.263414<br><br />Mean Absolute Error : 1.420090e+00<br><br />Root Mean Square Error : 601.232345<p>";
+			}else if (selectedOption == "33") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/KDJgq85/Oregon.png'><p>Mean Squared Error : 921.451971<br><br />Mean Absolute Error : 8.998398e-01<br><br />Root Mean Square Error : 1708.012259<p>";
+			}else if (selectedOption == "34") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/TrGqWh8/Rhode-Island.png'><p>Mean Squared Error : 266.159755<br><br />Mean Absolute Error : 1.924868e+01<br><br />Root Mean Square Error : 459.832687<p>";
+			}else if (selectedOption == "35") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/J7xFmC3/South-Carolina.png'><p>Mean Squared Error : 669.389120<br><br />Mean Absolute Error : 9.416935e-01<br><br />Root Mean Square Error : 691.440104<p>";
+			}else if (selectedOption == "36") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/fv1VZdj/South-Dakota.png'><p>Mean Squared Error : 85.484894<br><br />Mean Absolute Error : 3.559952e+00<br><br />Root Mean Square Error : 130.014492<p>";
+			}else if (selectedOption == "37") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/9vd1xW1/Texas.png'><p>Mean Squared Error : 3317.298824<br><br />Mean Absolute Error : 8.098637e-01<br><br />Root Mean Square Error : 8346.852192<p>";
+			}else if (selectedOption == "38") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/k4BK7G4/Utah.png'><p>Mean Squared Error : 332.242227<br><br />Mean Absolute Error : 7.397318e-01<br><br />Root Mean Square Error : 629.273600<p>";
+			}else if (selectedOption == "39") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/fvcKSPC/Vermont.png'><p>Mean Squared Error : 104.975544<br><br />Mean Absolute Error : 2.692738e+00<br><br />Root Mean Square Error : 164.135663<p>";
+			}else if (selectedOption == "40") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/H7MHWhH/Virginia.png'><p>Mean Squared Error : 1112.590611<br><br />Mean Absolute Error : 9.954800e-01<br><br />Root Mean Square Error : 1885.089498<p>";
+			}else if (selectedOption == "41") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/2st8chk/Washington-D-C.png'><p>Mean Squared Error : 1119.531913<br><br />Mean Absolute Error : 1.038879e+00<br><br />Root Mean Square Error : 2067.261539<p>";
+			}else if (selectedOption == "42") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/rvXVCZ0/Washington.png'><p>Mean Squared Error : 1395.378874<br><br />Mean Absolute Error : 6.870723e-01<br><br />Root Mean Square Error : 2079.490252<p>";
+			}else if (selectedOption == "43") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/SsRWdRb/West-Virginia.png'><p>Mean Squared Error : 1489.277929<br><br />Mean Absolute Error : 1.906325e+00<br><br />Root Mean Square Error : 2139.563562<p>";
+			}else if (selectedOption == "44") {
+				displayArea.innerHTML = "<img src='https://i.ibb.co/bKb82YR/Wisconsin.png'><p>Mean Squared Error : 3184.179800<br><br />Mean Absolute Error : 9.579011e-01<br><br />Root Mean Square Error : 5372.393452<p>";
+			}
+            // else if (selectedOption == "45") {
+			// 	displayArea.innerHTML = "<img src=''><p>Mean Squared Error : 206.857801<br><br />Mean Absolute Error : 1.084511e+00<br><br />Root Mean Square Error : 305.861447<p>";
+			// }else if (selectedOption == "46") {
+			// 	displayArea.innerHTML = "<img src=''><p>Mean Squared Error : 206.857801<br><br />Mean Absolute Error : 1.084511e+00<br><br />Root Mean Square Error : 305.861447<p>";
+			// }else if (selectedOption == "47") {
+			// 	displayArea.innerHTML = "<img src=''><p>Mean Squared Error : 206.857801<br><br />Mean Absolute Error : 1.084511e+00<br><br />Root Mean Square Error : 305.861447<p>";
+			// }else if (selectedOption == "48") {
+			// 	displayArea.innerHTML = "<img src=''><p>Mean Squared Error : 206.857801<br><br />Mean Absolute Error : 1.084511e+00<br><br />Root Mean Square Error : 305.861447<p>";
+			}
+		// }/
+	</script>
+
+</body>
+</html>
