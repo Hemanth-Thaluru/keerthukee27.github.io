@@ -25,11 +25,7 @@ function changechoice(){
         
     }
     else{
-        // document.getElementById("modelresult").style="visibility:hidden;"
-        // document.getElementById("displayArea").style="visibility:hidden;"
-        // document.getElementById("eda").style="visibility:visible;"
-        // document.getElementById("5states").style="visibility:hidden;"
-        // document.getElementById("5cities").style="visibility:hidden;"
+
 
         document.getElementById("modelresult").hidden= true
         document.getElementById("displayArea").hidden= true
@@ -43,19 +39,11 @@ function changechoice(){
 
 function changeanalysis(){
     var selectedValue = document.getElementById("analysis_type").value
-    // document.getElementById("modelresult").style="visibility:hidden;"
-    // document.getElementById("eda").style="visibility:visible;"
 
     document.getElementById("modelresult").hidden= true
     document.getElementById("eda").hidden= false
 
     if(selectedValue=='Top Five States'){
-        // document.getElementById("5states").style="visibility:hidden;"
-        // document.getElementById("5cities").style="visibility:hidden;"
-        // document.getElementById("chooseyear").style="visibility:visible;"
-        // document.getElementById("choosestate").style="visibility:hidden;"
-        // document.getElementById("chooseyearforcity").style="visibility:hidden;"
-
 
         document.getElementById("5states").hidden= true
         document.getElementById("5cities").hidden= true
@@ -124,14 +112,11 @@ function changeanalysis(){
 
 
 function showYearsForCities(){
-    // document.getElementById("5states").style="visibility:hidden;"
-    // document.getElementById("5cities").style="visibility:hidden;"
 
     document.getElementById("5states").hidden= true
     document.getElementById("5cities").hidden= true
 
     statename = document.getElementById("state_list").value
-    // document.getElementById("chooseyearforcity").style="visibility:visible;"
     document.getElementById("chooseyearforcity").hidden= false
 
     d3.csv("/Warn Database 1-22-2023 - Sheet1.csv", function(data) {
@@ -160,8 +145,6 @@ function showYearsForCities(){
 }
 
 function showtop5cities(){
-    // document.getElementById("5states").style="visibility:hidden;"
-    // document.getElementById("5cities").style="visibility:visible;"
 
     document.getElementById("5states").hidden= true
     document.getElementById("5cities").hidden= false
