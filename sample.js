@@ -6,14 +6,6 @@ document.getElementById("modelresult").style="visibility:hidden;"
 function changechoice(){
     var selectedValue = document.getElementById("choice").value
     if(selectedValue=='model_result'){
-        // document.getElementById("modelresult").style="visibility:visible;"
-        // document.getElementById("eda").style="visibility:hidden;"
-        // document.getElementById("eda").style="visibility:hidden;"
-        // document.getElementById("choosestate").style="visibility:hidden;"
-        // document.getElementById("5states").style="visibility:hidden;"
-        // document.getElementById("5cities").style="visibility:hidden;"
-        // document.getElementById("chooseyear").style="visibility:hidden;"
-        // document.getElementById("chooseyearforcity").style="visibility:hidden;"
 
         document.getElementById("modelresult").hidden=false
         document.getElementById("eda").hidden= true
