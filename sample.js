@@ -187,12 +187,11 @@ function showtop5cities(){
 }
 
 function top5stateschart(){
-    // document.getElementById("5states").style="visibility:visible;"
-
     document.getElementById("5states").hidden= false
     d3.csv("/Warn Database 1-22-2023 - Sheet1.csv", function(data) {
         year_value = document.getElementById('year_list').value
         states ={}
+        
         for(var i=0;i<data.length;i++){
             states[data[i]['State']] = 0
         }
